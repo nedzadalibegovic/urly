@@ -1,0 +1,21 @@
+{
+  "name": "urly",
+  "version": "1.0.0",
+  "description": "URL shortener",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config index.js"
+  },
+  "author": "Nedzad Alibegovic",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.8.11",
+    "valid-url": "^1.0.9"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "nodemon": "^2.0.2"
+  }
+}
