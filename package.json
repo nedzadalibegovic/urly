@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon -r dotenv/config index.js"
+    "dev": "nodemon --inspect -r dotenv/config index.js"
   },
   "author": "Nedzad Alibegovic",
   "license": "UNLICENSED",
   "dependencies": {
+    "@hapi/joi": "^17.1.0",
     "express": "^4.17.1",
+    "joi-objectid": "^3.0.1",
     "mongoose": "^5.8.11",
     "valid-url": "^1.0.9"
   },

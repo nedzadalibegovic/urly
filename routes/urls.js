@@ -1,8 +1,5 @@
-const express = require('express');
-const validUrl = require('valid-url');
 const Url = require('../models/url');
-
-const router = express.Router();
+const router = require('express').Router();
 
 router.get('/', async (req, res) => {
     try {
@@ -16,7 +13,8 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const document = await Url.create(req.body);
+        const { title, url } = req.body;
+        const document = await Url.create({ title, url });
 
         res.status(200).json(document);
     } catch (err) {
@@ -26,9 +24,7 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        const document = await Url.findById(req.body.url);
-
-        res.status(200).json(document);
+        res.status(200).json(res.locals.document);
     } catch (err) {
         res.status(500).json(err);
     }
@@ -36,7 +32,12 @@ router.get('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
     try {
-        const document = await Url.findByIdAndUpdate(req.params.id, req.body);
+        const document = res.locals.document;
+
+        Object.assign(document, req.body);
+        document.date = Date.now();
+
+        document.save();
 
         res.status(200).json(document);
     } catch (err) {
@@ -46,11 +47,11 @@ router.patch('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     try {
-        const document = await Url.findByIdAndDelete(req.params.id);
+        const document = res.locals.document;
 
-        res.status(200).json({
-            message: 'URL deleted'
-        });
+        document.remove();
+
+        res.status(200).json(document);
     } catch (err) {
         res.status(500).json(err);
     }
