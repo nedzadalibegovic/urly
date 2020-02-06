@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const urlRoute = require('./routes/urls');
 const validationRoute = require('./routes/validation');
 
@@ -12,6 +13,7 @@ mongoose.connect(process.env.MONGO);
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use('/', validationRoute);
 app.use('/', urlRoute)
