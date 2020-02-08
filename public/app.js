@@ -7,7 +7,7 @@ const makeRow = (rowID, element) => {
                 <button type="button" class="btn btn-primary" 
                 data-toggle="tooltip" title="Last update: ${new Date(element.date).toLocaleString()}"
                 data-placement="left" 
-                onclick="modalEdit(${rowID})">Edit</button>
+                onclick="edit_modal(${rowID})">Edit</button>
             </td>`
 }
 
@@ -28,15 +28,15 @@ const getLinks = async () => {
     })
 }
 
-const modalEdit = rowID => {
+const edit_modal = rowID => {
     const url = urls[rowID];
 
     const modal = `
-    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="modalEditLabel" aria-hidden="true">
+    <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="modalEditLabel">${url.title}</h5>
+            <h5 class="modal-title" id="edit_modalLabel">${url.title}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -65,21 +65,40 @@ const modalEdit = rowID => {
           </div>
           <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="submitEdit(${rowID})">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="edit_submit(${rowID})">Save changes</button>
           </div>
         </div>
       </div>
     </div>`
 
     $('body').prepend(modal);
-    $('#modalEdit').modal();
+    $('#edit_modal').modal();
 
-    $('#modalEdit').on('hidden.bs.modal', () => {
-        $('#modalEdit').remove();
+    $('#edit_modal').on('hidden.bs.modal', () => {
+        $('#edit_modal').remove();
     });
 }
 
-const submitEdit = async (rowID) => {
+const edit_tooltip_success = (json) => {
+    const tooltip = `
+        <div class="toast" data-delay="1000" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
+            <div class="toast-header">
+                <strong class="mr-auto">Urly: ${json.title}</strong>
+            </div>
+            <div class="toast-body">
+                Successfuly updated!
+            </div>
+        </div>`;
+
+    $('#toast-shelf').html(tooltip);
+
+    $('.toast').toast('show');
+    $('.toast').on('hidden.bs.toast', function () {
+        $(this).remove();
+    });
+}
+
+const edit_submit = async (rowID) => {
     const row = $('#append').children().eq(rowID);
     const data = {
         _id: $('#id').val(),
@@ -110,11 +129,12 @@ const submitEdit = async (rowID) => {
         row.tooltip({
             selector: '[data-toggle="tooltip"]'
         });
+
+        // show tooltip on success
+        edit_tooltip_success(json);
     } catch (err) {
         console.error(err);
     }
-
-    // $('#modalEdit').modal('hide');
 }
 
 getLinks();
