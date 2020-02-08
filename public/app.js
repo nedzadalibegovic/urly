@@ -4,7 +4,10 @@ const makeRow = (rowID, element) => {
     return `<td>${element.title}</td>
             <td>${element.url}</td>
             <td class="text-right">
-                <button type="button" class="btn btn-primary" onclick="modalEdit(${rowID})">Edit</button>
+                <button type="button" class="btn btn-primary" 
+                data-toggle="tooltip" title="Last update: ${new Date(element.date).toLocaleString()}"
+                data-placement="left" 
+                onclick="modalEdit(${rowID})">Edit</button>
             </td>`
 }
 
@@ -19,6 +22,10 @@ const getLinks = async () => {
     }
 
     $('#urlCount').append(urls.length);
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 }
 
 const modalEdit = rowID => {
@@ -100,6 +107,9 @@ const submitEdit = async (rowID) => {
 
         // update row with new data
         row.html(makeRow(rowID, json));
+        row.tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
     } catch (err) {
         console.error(err);
     }
