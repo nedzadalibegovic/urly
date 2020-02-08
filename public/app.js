@@ -1,14 +1,12 @@
 let urls;
 
 const makeRow = (rowID, element) => {
-    return `<td>${element.title}</td>
-            <td>${element.url}</td>
-            <td class="text-right">
-                <button type="button" class="btn btn-primary" 
-                data-toggle="tooltip" title="Last update: ${new Date(element.date).toLocaleString()}"
-                data-placement="left" 
-                onclick="edit_modal(${rowID})">Edit</button>
-            </td>`
+    return `
+        <td>${element.title}</td>
+        <td>${element.url}</td>
+        <td class="text-right">
+            <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(element.date).toLocaleString()}" data-placement="left" onclick="edit_modal(${rowID})">Edit</button>
+        </td>`;
 }
 
 const getLinks = async () => {
@@ -32,44 +30,42 @@ const edit_modal = rowID => {
     const url = urls[rowID];
 
     const modal = `
-    <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="edit_modalLabel">${url.title}</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-          <form>
-          <div class="form-group">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" id="id" value="${url._id}" readonly>
-          </div>
-          <div class="form-group">
-            <label for="title">Title</label>
-            <input type="text" class="form-control" id="title" value="${url.title}">
-          </div>
-          <div class="form-group">
-            <label for="url">URL</label>
-            <input type="text" class="form-control" id="url" value="${url.url}">
-          </div>
-          <div class="form-group">
-            <label for="lastEdit">Last edit</label>
-            <input type="text" class="form-control" id="lastEdit" value="${new Date(url.date).toLocaleString()}" readonly>
-          </div>
-        </form>
-
-          </div>
-          <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="edit_submit(${rowID})">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>`
+        <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="edit_modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit_modalLabel">${url.title}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="id">ID</label>
+                                <input type="text" class="form-control" id="id" value="${url._id}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" class="form-control" id="title" value="${url.title}">
+                            </div>
+                            <div class="form-group">
+                                <label for="url">URL</label>
+                                <input type="text" class="form-control" id="url" value="${url.url}">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastEdit">Last edit</label>
+                                <input type="text" class="form-control" id="lastEdit" value="${new Date(url.date).toLocaleString()}" readonly>
+                            </div>
+                        </form>
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" onclick="edit_submit(${rowID})">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>`
 
     $('body').prepend(modal);
     $('#edit_modal').modal();
