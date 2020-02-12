@@ -1,4 +1,5 @@
-let urls = new Array();
+const urls = new Array();
+const apiUrl = 'http://192.168.0.10:3000/api/';
 
 const makeRow = (rowID, document) => {
     return `
@@ -21,7 +22,7 @@ const addToTable = (document) => {
 }
 
 const getLinks = async () => {
-    const response = await fetch('http://192.168.0.10:3000/api');
+    const response = await fetch(apiUrl);
     const json = await response.json();
 
     for (const document of json) {
@@ -106,7 +107,7 @@ const edit_submit = async (rowID) => {
     }
 
     try {
-        let response = await fetch(`http://192.168.0.10:3000/api/${data._id}`, {
+        let response = await fetch(`${apiUrl}${data._id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
