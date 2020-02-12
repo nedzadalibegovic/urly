@@ -154,6 +154,35 @@ const create_validateURL = (url) => {
     return re_weburl.test(url);
 }
 
+const create_input_check = async () => {
+    const input = $('#long-url').val();
+
+    // check if input is syntactically valid
+    if (create_validateURL(input) === false) {
+        $('#long-url').removeClass('is-valid').addClass('is-invalid');
+        $('#next').prop('disabled', true);
+        $('.invalid-feedback').text('Please provide a valid url');
+        $('.invalid-feedback').css('display', 'block');
+        return;
+    }
+
+    const title = await getSiteTitle(input);
+
+    // check if URL is reachable
+    if (title === null) {
+        $('#long-url').removeClass('is-valid').addClass('is-invalid');
+        $('#next').prop('disabled', true);
+        $('.invalid-feedback').text('Please provide a reachable url');
+        $('.invalid-feedback').css('display', 'block');
+        return;
+    }
+
+    $('#long-url').removeClass('is-invalid').addClass('is-valid');
+    $('#title').val(title);
+    $('#next').prop('disabled', false);
+    $('.invalid-feedback').css('display', 'none');
+}
+
 const create_generate_modal = () => {
     const carousel = `
         <div id="create_carousel" class="carousel slide d-flex" data-wrap="false" data-interval="false" data-ride="carousel" style="min-height: 100px;">
@@ -205,34 +234,16 @@ const create_generate_modal = () => {
         $('#create_modal').remove();
     });
 
-    // URL validation logic
-    $('#long-url').on('input', async () => {
-        const input = $('#long-url').val();
+    // https://stackoverflow.com/a/5926782
+    let typingTimer;
+    let doneTypingInterval = 200;
 
-        // check if input is syntactically valid
-        if (create_validateURL(input) === false) {
-            $('#long-url').removeClass('is-valid').addClass('is-invalid');
-            $('#next').prop('disabled', true);
-            $('.invalid-feedback').text('Please provide a valid url');
-            $('.invalid-feedback').css('display', 'block');
-            return;
+    $('#long-url').keyup(() => {
+        clearTimeout(typingTimer);
+
+        if ($('#long-url').val()) {
+            typingTimer = setTimeout(create_input_check, doneTypingInterval);
         }
-
-        const title = await getSiteTitle(input);
-
-        // check if URL is reachable
-        if (title === null) {
-            $('#long-url').removeClass('is-valid').addClass('is-invalid');
-            $('#next').prop('disabled', true);
-            $('.invalid-feedback').text('Please provide a reachable url');
-            $('.invalid-feedback').css('display', 'block');
-            return;
-        }
-
-        $('#long-url').removeClass('is-invalid').addClass('is-valid');
-        $('#title').val(title);
-        $('#next').prop('disabled', false);
-        $('.invalid-feedback').css('display', 'none');
     });
 }
 
