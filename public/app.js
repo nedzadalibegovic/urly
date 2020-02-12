@@ -75,14 +75,14 @@ const edit_generate_modal = rowID => {
     });
 }
 
-const edit_tooltip_success = (json) => {
+const createTooltip = (title, message) => {
     const tooltip = `
         <div class="toast" data-delay="1000" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
             <div class="toast-header">
-                <strong class="mr-auto">Urly: ${json.title}</strong>
+                <strong class="mr-auto">Urly: ${title}</strong>
             </div>
             <div class="toast-body">
-                Successfuly updated!
+                ${message}
             </div>
         </div>`;
 
@@ -127,7 +127,7 @@ const edit_submit = async (rowID) => {
         });
 
         // show tooltip on success
-        edit_tooltip_success(json);
+        createTooltip(json._id, `${json.title} successfully updated!`);
     } catch (err) {
         console.error(err);
     }
