@@ -1,5 +1,6 @@
 const urls = new Array();
 const apiUrl = 'http://192.168.0.10:3000/api/';
+const redirectUrl = 'http://192.168.0.10:3000/';
 
 const makeRow = (rowID, document) => {
     return `
@@ -81,7 +82,7 @@ const edit_generate_modal = rowID => {
 
 const createTooltip = (title, message) => {
     const tooltip = `
-        <div class="toast" data-delay="1000" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
+        <div class="toast" data-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
             <div class="toast-header">
                 <strong class="mr-auto">Urly: ${title}</strong>
             </div>
@@ -99,42 +100,37 @@ const createTooltip = (title, message) => {
 }
 
 const edit_submit = async (rowID) => {
-    const row = $('#append').children().eq(rowID);
     const data = {
         _id: $('#id').val(),
         title: $('#title').val(),
         url: $('#url').val()
     }
 
-    try {
-        let response = await fetch(`${apiUrl}${data._id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        });
-        let json = await response.json();
+    const response = await fetch(`${apiUrl}${data._id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+    const json = await response.json();
 
-        // update data in global array
-        urls[rowID] = json;
+    // update data in global array
+    urls[rowID] = json;
 
-        // update modal
-        $('#title').val(json.title);
-        $('#url').val(json.url);
-        $('#lastEdit').val(new Date(json.date).toLocaleString());
+    // update modal
+    $('#title').val(json.title);
+    $('#url').val(json.url);
+    $('#lastEdit').val(new Date(json.date).toLocaleString());
 
-        // update row with new data
-        row.replaceWith(makeRow(rowID, json));
-        $(`#url-${rowID}`).tooltip({
-            selector: '[data-toggle="tooltip"]'
-        });
+    // update row with new data
+    $(`#url-${rowID}`).replaceWith(makeRow(rowID, json));
+    $(`#url-${rowID}`).tooltip({
+        selector: '[data-toggle="tooltip"]'
+    });
 
-        // show tooltip on success
-        createTooltip(json._id, `${json.title} successfully updated!`);
-    } catch (err) {
-        console.error(err);
-    }
+    // show tooltip on success
+    createTooltip(json._id, `${json.title} successfully updated!`);
 }
 
 const getSiteTitle = async (url) => {
@@ -204,9 +200,7 @@ const create_generate_modal = () => {
                         <input type="text" class="form-control m-2" id="title">
                     </div>
                 </div>
-                <div id="short-url-crsl" class="carousel-item text-center">
-                    // WIP
-                </div>
+                <div id="short-url-crsl" class="carousel-item text-center"></div>
             </div>
         </div>`;
 
@@ -241,6 +235,7 @@ const create_generate_modal = () => {
     let typingTimer;
     let doneTypingInterval = 200;
 
+    // URL validation
     $('#long-url').keyup(() => {
         clearTimeout(typingTimer);
 
@@ -248,6 +243,30 @@ const create_generate_modal = () => {
             typingTimer = setTimeout(create_input_check, doneTypingInterval);
         }
     });
+
+    $('#next').click(async () => {
+        if ($('#title-crsl').hasClass('active')) {
+            await create_POST();
+            $('#short-url-crsl').html(`<a href="${redirectUrl}${urls[urls.length - 1]._id}">${redirectUrl}${urls[urls.length - 1]._id}</a>`);
+        }
+    });
+}
+
+const create_POST = async () => {
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            title: $('#title').val(),
+            url: $('#long-url').val()
+        })
+    });
+    const json = await response.json();
+
+    addToTable(json);
+    createTooltip(json._id, `${json.title} has been shortened!`);
 }
 
 getLinks();
