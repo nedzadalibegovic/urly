@@ -2,6 +2,7 @@ const router = require('express').Router();
 const Url = require('../models/url');
 const joi = require('@hapi/joi');
 joi.objectId = require('joi-objectid')(joi);
+const urlExists = require('url-exist');
 
 const validation = joi.object({
     _id: joi.objectId(),
@@ -23,6 +24,12 @@ router.post('/', async (req, res, next) => {
         if (error != null) {
             return res.status(400).json({
                 message: error
+            });
+        }
+
+        if (!await urlExists(req.body.url)) {
+            return res.status(400).json({
+                message: "URL not reachable"
             });
         }
 

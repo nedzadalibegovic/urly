@@ -14,7 +14,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "joi-objectid": "^3.0.1",
-    "mongoose": "^5.8.11"
+    "mongoose": "^5.8.11",
+    "url-exist": "^1.1.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
