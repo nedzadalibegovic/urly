@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const urlRoute = require('./routes/urls');
 const validationRoute = require('./routes/validation');
+const redirectRoute = require('./routes/redirect');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -18,5 +19,6 @@ app.use(express.static('public'))
 app.use(express.json());
 app.use('/api/', validationRoute);
 app.use('/api/', urlRoute)
+app.use('/', redirectRoute);
 
 app.listen(process.env.PORT);
