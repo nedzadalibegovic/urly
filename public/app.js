@@ -1,29 +1,32 @@
-let urls;
+let urls = new Array();
 
-const makeRow = (rowID, element) => {
+const makeRow = (rowID, document) => {
     return `
-        <td>${element.title}</td>
-        <td>${element.url}</td>
-        <td class="text-right">
-            <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(element.date).toLocaleString()}" data-placement="left" onclick="edit_generate_modal(${rowID})">Edit</button>
-        </td>`;
+        <tr id="url-${rowID}">
+            <td>${document.title}</td>
+            <td>${document.url}</td>
+            <td class="text-right">
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(document.date).toLocaleString()}" data-placement="left" onclick="edit_generate_modal(${rowID})">Edit</button>
+            </td>
+        </tr>`;
+}
+
+const addToTable = (document) => {
+    $('#append').append(makeRow(urls.length, document));
+    $(`#url-${urls.length}`).tooltip({
+        selector: '[data-toggle="tooltip"]'
+    });
+    urls.push(document);
+    $('#total').text(urls.length);
 }
 
 const getLinks = async () => {
-    let response = await fetch('http://192.168.0.10:3000/api');
-    urls = await response.json();
+    const response = await fetch('http://192.168.0.10:3000/api');
+    const json = await response.json();
 
-    for (let i = 0; i < urls.length; i++) {
-        const element = urls[i];
-
-        $('#append').append('<tr>' + makeRow(i, element) + '</tr>');
+    for (const document of json) {
+        addToTable(document);
     }
-
-    $('#append').tooltip({
-        selector: '[data-toggle="tooltip"]'
-    });
-
-    $('#urlCount').append(urls.length);
 }
 
 const edit_generate_modal = rowID => {
@@ -121,8 +124,8 @@ const edit_submit = async (rowID) => {
         $('#lastEdit').val(new Date(json.date).toLocaleString());
 
         // update row with new data
-        row.html(makeRow(rowID, json));
-        row.tooltip({
+        row.replaceWith(makeRow(rowID, json));
+        $(`#url-${rowID}`).tooltip({
             selector: '[data-toggle="tooltip"]'
         });
 
@@ -187,20 +190,20 @@ const create_generate_modal = () => {
     const carousel = `
         <div id="create_carousel" class="carousel slide d-flex" data-wrap="false" data-interval="false" data-ride="carousel" style="min-height: 100px;">
             <div class="carousel-inner d-flex align-items-center">
-                <div class="carousel-item active text-center">
+                <div id="long-url-crsl" class="carousel-item active text-center">
                     <label for="long-url">Long URL goes down here.</label>
                         <div class="input-group">
                             <input type="url" class="form-control m-2" id="long-url" required>
                         </div>
                         <div class="invalid-feedback"></div>
                 </div>
-                <div class="carousel-item text-center">
+                <div id="title-crsl" class="carousel-item text-center">
                     <label for="title">What shall be the title?</label>
                     <div class="input-group">
                         <input type="text" class="form-control m-2" id="title">
                     </div>
                 </div>
-                <div class="carousel-item text-center">
+                <div id="short-url-crsl" class="carousel-item text-center">
                     // WIP
                 </div>
             </div>
@@ -220,7 +223,6 @@ const create_generate_modal = () => {
                         ${carousel}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="prev" class="btn btn-outline-dark" href="#create_carousel" role="button" data-slide="prev">Previous</button>
                         <button type="button" id="next" class="btn btn-outline-dark" href="#create_carousel" role="button" data-slide="next" disabled>Next</button>
                     </div>
                 </div>
