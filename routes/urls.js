@@ -34,11 +34,11 @@ router.patch('/:id', async (req, res) => {
     try {
         const document = res.locals.document;
 
-        Object.assign(document, req.body);
+        document.url = req.body.url;
+        document.title = req.body.title;
         document.date = Date.now();
-
         document.save();
-
+        
         res.status(200).json(document);
     } catch (err) {
         res.status(500).json(err);
