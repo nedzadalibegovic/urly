@@ -29,7 +29,7 @@ router.post('/', async (req, res, next) => {
 
         if (!await urlExists(req.body.url)) {
             return res.status(400).json({
-                message: "URL not reachable"
+                message: 'URL not reachable'
             });
         }
 
@@ -45,7 +45,7 @@ router.get('/:id', async (req, res, next) => {
 
         if (document === null) {
             return res.status(404).json({
-                message: "URL not found"
+                message: 'URL not found'
             });
         }
 
@@ -63,7 +63,7 @@ router.patch('/:id', async (req, res, next) => {
 
         if (document === null) {
             return res.status(404).json({
-                message: "URL not found"
+                message: 'URL not found'
             });
         }
 
@@ -86,7 +86,7 @@ router.delete('/:id', async (req, res, next) => {
 
         if (document === null) {
             return res.status(404).json({
-                message: "URL not found"
+                message: 'URL not found'
             });
         }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const urls = new Array();
 const apiUrl = 'http://192.168.0.10:3000/api/';
 const redirectUrl = 'http://192.168.0.10:3000/';
@@ -11,7 +12,7 @@ const makeRow = (rowID, document) => {
                 <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(document.date).toLocaleString()}" data-placement="left" onclick="edit_generate_modal(${rowID})">Edit</button>
             </td>
         </tr>`;
-}
+};
 
 const addToTable = (document) => {
     $('#append').append(makeRow(urls.length, document));
@@ -20,7 +21,7 @@ const addToTable = (document) => {
     });
     urls.push(document);
     $('#total').text(urls.length);
-}
+};
 
 const getLinks = async () => {
     const response = await fetch(apiUrl);
@@ -29,7 +30,7 @@ const getLinks = async () => {
     for (const document of json) {
         addToTable(document);
     }
-}
+};
 
 const edit_generate_modal = rowID => {
     const url = urls[rowID];
@@ -78,7 +79,7 @@ const edit_generate_modal = rowID => {
     $('#edit_modal').on('hidden.bs.modal', () => {
         $('#edit_modal').remove();
     });
-}
+};
 
 const createTooltip = (title, message) => {
     const tooltip = `
@@ -97,14 +98,14 @@ const createTooltip = (title, message) => {
     $('.toast').on('hidden.bs.toast', function () {
         $(this).remove();
     });
-}
+};
 
 const edit_submit = async (rowID) => {
     const data = {
         _id: $('#id').val(),
         title: $('#title').val(),
         url: $('#url').val()
-    }
+    };
 
     const response = await fetch(`${apiUrl}${data._id}`, {
         method: 'PATCH',
@@ -131,7 +132,7 @@ const edit_submit = async (rowID) => {
 
     // show tooltip on success
     createTooltip(json._id, `${json.title} successfully updated!`);
-}
+};
 
 const getSiteTitle = async (url) => {
     const response = await fetch('https://cors-anywhere.herokuapp.com/' + url);
@@ -141,18 +142,18 @@ const getSiteTitle = async (url) => {
     }
 
     const text = await response.text();
-    const doc = new DOMParser().parseFromString(text, "text/html");
+    const doc = new DOMParser().parseFromString(text, 'text/html');
     const title = doc.querySelectorAll('title')[0];
 
     return title.innerText;
-}
+};
 
 // https://mathiasbynens.be/demo/url-regex - @diegoperini
 const create_validateURL = (url) => {
     const re_weburl = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
 
     return re_weburl.test(url);
-}
+};
 
 const create_input_check = async () => {
     const input = $('#long-url').val();
@@ -181,7 +182,7 @@ const create_input_check = async () => {
     $('#title').val(title);
     $('#next').prop('disabled', false);
     $('.invalid-feedback').css('display', 'none');
-}
+};
 
 const create_generate_modal = () => {
     const carousel = `
@@ -250,7 +251,7 @@ const create_generate_modal = () => {
             $('#short-url-crsl').html(`<a href="${redirectUrl}${urls[urls.length - 1]._id}">${redirectUrl}${urls[urls.length - 1]._id}</a>`);
         }
     });
-}
+};
 
 const create_POST = async () => {
     const response = await fetch(apiUrl, {
@@ -267,6 +268,6 @@ const create_POST = async () => {
 
     addToTable(json);
     createTooltip(json._id, `${json.title} has been shortened!`);
-}
+};
 
 getLinks();
