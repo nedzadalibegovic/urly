@@ -37,14 +37,15 @@ router.post('/', async (req, res) => {
         }
 
         const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
-        const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        // const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
 
         if (!await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken })) {
             await Token.create({ _id: user._id, token: refreshToken });
         }
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/token' });
-        res.status(200).json({ refreshToken: refreshToken, accessToken: accessToken });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/token', maxAge: 604800000 });
+        // res.status(200).json({ refreshToken: refreshToken, accessToken: accessToken });
+        res.sendStatus(200);
     } catch (err) {
         res.status(500).json(err);
     }
