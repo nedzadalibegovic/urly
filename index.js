@@ -24,7 +24,7 @@ app.use(express.json());
 
 // front end
 app.use('/login', loginRoute);
-app.use(express.static('public'));
+app.use(express.static('public/root'));
 
 // api
 app.use('/api', authentication);
