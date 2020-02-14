@@ -1,7 +1,39 @@
-/* eslint-disable no-unused-vars */
+let accessToken;
 const urls = new Array();
-const apiUrl = 'http://192.168.0.10:3000/api/';
-const redirectUrl = 'http://192.168.0.10:3000/';
+const apiURL = location.href + 'api/';
+
+const getAccessToken = async () => {
+    const response = await fetch(location.href + 'token');
+
+    if (response.status === 401) {
+        location.href = '/login';
+    }
+
+    const json = await response.json();
+    accessToken = json.accessToken;
+    return accessToken;
+};
+
+const fetch_auth = async (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = { 'Authorization': `Bearer ${accessToken}` };
+    } else {
+        options.headers['Authorization'] = `Bearer ${accessToken}`;
+    }
+
+    try {
+        const response = await fetch(url, options);
+
+        if (response.status !== 200) {
+            throw null;
+        }
+
+        return response;
+    } catch (err) {
+        await getAccessToken();
+        return fetch_auth(url, options);
+    }
+};
 
 const makeRow = (rowID, document) => {
     return `
@@ -24,7 +56,7 @@ const addToTable = (document) => {
 };
 
 const getLinks = async () => {
-    const response = await fetch(apiUrl);
+    const response = await fetch_auth(apiURL);
     const json = await response.json();
 
     for (const document of json) {
@@ -107,13 +139,14 @@ const edit_submit = async (rowID) => {
         url: $('#url').val()
     };
 
-    const response = await fetch(`${apiUrl}${data._id}`, {
+    const response = await fetch_auth(`${apiURL}${data._id}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
     });
+
     const json = await response.json();
 
     // update data in global array
@@ -237,7 +270,7 @@ const create_generate_modal = () => {
     let doneTypingInterval = 200;
 
     // URL validation
-    $('#long-url').keyup(() => {
+    $('#long-url').on('input', function () {
         clearTimeout(typingTimer);
 
         if ($('#long-url').val()) {
@@ -248,13 +281,13 @@ const create_generate_modal = () => {
     $('#next').click(async () => {
         if ($('#title-crsl').hasClass('active')) {
             await create_POST();
-            $('#short-url-crsl').html(`<a href="${redirectUrl}${urls[urls.length - 1]._id}">${redirectUrl}${urls[urls.length - 1]._id}</a>`);
+            $('#short-url-crsl').html(`<a href="${location.href}${urls[urls.length - 1]._id}">${location.href}${urls[urls.length - 1]._id}</a>`);
         }
     });
 };
 
 const create_POST = async () => {
-    const response = await fetch(apiUrl, {
+    const response = await fetch_auth(apiURL, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -264,10 +297,11 @@ const create_POST = async () => {
             url: $('#long-url').val()
         })
     });
+
     const json = await response.json();
 
     addToTable(json);
     createTooltip(json._id, `${json.title} has been shortened!`);
 };
 
-getLinks();
+getAccessToken().then(getLinks);
