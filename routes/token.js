@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
             throw null;
         }
 
-        const accessToken = jwt.sign({ _id: decoded._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10s' });
+        const accessToken = jwt.sign({ _id: decoded._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
 
         res.json({ accessToken: accessToken });
     } catch (err) {
