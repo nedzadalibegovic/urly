@@ -5,7 +5,8 @@ const urlRoute = require('./routes/urls');
 const validationRoute = require('./routes/validation');
 const loginRoute = require('./routes/login');
 const redirectRoute = require('./routes/redirect');
-const { authentication, tokenRoute } = require('./routes/auth');
+const tokenRoute = require('./routes/token');
+const authentication = require('./routes/auth');
 const cookieParser = require('cookie-parser');
 
 mongoose.set('useNewUrlParser', true);
