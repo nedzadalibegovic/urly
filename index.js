@@ -10,6 +10,7 @@ const authentication = require('./routes/auth');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
+const { errorHandler, notFound } = require('./routes/error');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -41,5 +42,11 @@ app.use('/token', tokenRoute);
 
 // redirection
 app.use('/', redirectRoute);
+
+// not found
+app.use(notFound);
+
+// error handler
+app.use(errorHandler);
 
 app.listen(process.env.PORT);

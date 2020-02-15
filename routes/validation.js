@@ -22,20 +22,18 @@ router.post('/', async (req, res, next) => {
         const { error } = validation.validate(req.body);
 
         if (error != null) {
-            return res.status(400).json({
-                message: error
-            });
+            res.status(400);
+            throw error;
         }
 
         if (!await urlExists(req.body.url)) {
-            return res.status(400).json({
-                message: 'URL not reachable'
-            });
+            res.status(400);
+            throw new Error('URL is not reachable');
         }
 
         next();
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
@@ -44,15 +42,14 @@ router.get('/:id', async (req, res, next) => {
         const document = await Url.findById(req.params.id);
 
         if (document === null) {
-            return res.status(404).json({
-                message: 'URL not found'
-            });
+            res.status(404);
+            throw new Error('Document not found');
         }
 
         res.locals.document = document;
         next();
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
@@ -62,21 +59,19 @@ router.patch('/:id', async (req, res, next) => {
         const document = await Url.findById(req.params.id);
 
         if (document === null) {
-            return res.status(404).json({
-                message: 'URL not found'
-            });
+            res.status(404);
+            throw new Error('Document not found');
         }
 
         if (error != null) {
-            return res.status(400).json({
-                message: error
-            });
+            res.status(400);
+            throw error;
         }
 
         res.locals.document = document;
         next();
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
@@ -85,15 +80,14 @@ router.delete('/:id', async (req, res, next) => {
         const document = await Url.findByIdAndDelete(req.params.id);
 
         if (document === null) {
-            return res.status(404).json({
-                message: 'URL not found'
-            });
+            res.status(404);
+            throw new Error('Document not found');
         }
 
         res.locals.document = document;
         next();
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 

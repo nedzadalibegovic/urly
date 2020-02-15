@@ -1,36 +1,36 @@
 const Url = require('../models/url');
 const router = require('express').Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
     try {
         const documents = await Url.find();
 
         res.status(200).json(documents);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
     try {
         const { title, url } = req.body;
         const document = await Url.create({ title, url });
 
         res.status(200).json(document);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', async (req, res, next) => {
     try {
         res.status(200).json(res.locals.document);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
     try {
         const document = res.locals.document;
 
@@ -38,14 +38,14 @@ router.patch('/:id', async (req, res) => {
         document.title = req.body.title;
         document.date = Date.now();
         document.save();
-        
+
         res.status(200).json(document);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res, next) => {
     try {
         const document = res.locals.document;
 
@@ -53,7 +53,7 @@ router.delete('/:id', async (req, res) => {
 
         res.status(200).json(document);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 

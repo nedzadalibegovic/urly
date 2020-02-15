@@ -5,7 +5,7 @@ const apiURL = location.href + 'api/';
 const getAccessToken = async () => {
     const response = await fetch(location.href + 'token');
 
-    if (response.status === 401) {
+    if (response.status === 403) {
         location.href = '/login';
     }
 

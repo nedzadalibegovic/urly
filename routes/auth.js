@@ -7,7 +7,8 @@ const verify = (req, res, next) => {
         const verified = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
         res.locals.userID = verified._id;
     } catch (err) {
-        return res.sendStatus(401);
+        res.status(403);
+        next(err);
     }
 
     next();

@@ -18,22 +18,25 @@ const validation = Joi.object({
 
 router.get('/', express.static('public/login'));
 
-router.post('/', async (req, res) => {
-    const { error } = validation.validate(req.body);
-
-    if (error != null) {
-        return res.status(400).json(error);
-    }
-
+router.post('/', async (req, res, next) => {
     try {
+        const { error } = validation.validate(req.body);
+
+        if (error != null) {
+            res.status(400);
+            throw error;
+        }
+
         const user = await User.findOne({ username: req.body.username });
 
         if (user === null) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            res.status(400);
+            throw new Error('Invalid username or password');
         }
 
         if (!await bcrypt.compare(req.body.password, user.password)) {
-            return res.status(400).json({ message: 'Invalid username or password' });
+            res.status(400);
+            throw new Error('Invalid username or password');
         }
 
         const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
@@ -47,7 +50,7 @@ router.post('/', async (req, res) => {
         // res.status(200).json({ refreshToken: refreshToken, accessToken: accessToken });
         res.sendStatus(200);
     } catch (err) {
-        res.status(500).json(err);
+        next(err);
     }
 });
 
