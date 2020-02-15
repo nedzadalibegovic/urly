@@ -8,6 +8,8 @@ const redirectRoute = require('./routes/redirect');
 const tokenRoute = require('./routes/token');
 const authentication = require('./routes/auth');
 const cookieParser = require('cookie-parser');
+const morgan = require('morgan');
+const helmet = require('helmet');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -19,6 +21,8 @@ mongoose.connect(process.env.MONGO);
 const app = express();
 
 // required middlewares
+app.use(helmet());
+app.use(morgan('common'));
 app.use(cors());
 app.use(express.json());
 
