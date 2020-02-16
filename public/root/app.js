@@ -24,7 +24,7 @@ const fetch_auth = async (url, options = {}) => {
     try {
         const response = await fetch(url, options);
 
-        if (response.status !== 200) {
+        if (response.status === 403) {
             throw null;
         }
 
@@ -41,7 +41,7 @@ const makeRow = (rowID, document) => {
             <td>${document.title}</td>
             <td>${document.url}</td>
             <td class="text-right">
-                <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(document.date).toLocaleString()}" data-placement="left" onclick="edit_generate_modal(${rowID})">Edit</button>
+                <button type="button" class="btn btn-primary" data-toggle="tooltip" title="Last update: ${new Date(document.updatedAt).toLocaleString()}" data-placement="left" onclick="edit_generate_modal(${rowID})">Edit</button>
             </td>
         </tr>`;
 };
@@ -64,6 +64,7 @@ const getLinks = async () => {
     }
 };
 
+// eslint-disable-next-line no-unused-vars
 const edit_generate_modal = rowID => {
     const url = urls[rowID];
 
@@ -93,7 +94,7 @@ const edit_generate_modal = rowID => {
                             </div>
                             <div class="form-group">
                                 <label for="lastEdit">Last edit</label>
-                                <input type="text" class="form-control" id="lastEdit" value="${new Date(url.date).toLocaleString()}" readonly>
+                                <input type="text" class="form-control" id="lastEdit" value="${new Date(url.updatedAt).toLocaleString()}" readonly>
                             </div>
                         </form>
                         </div>
@@ -115,7 +116,7 @@ const edit_generate_modal = rowID => {
 
 const createTooltip = (title, message) => {
     const tooltip = `
-        <div class="toast" data-delay="1500" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
+        <div class="toast" data-delay="2000" role="alert" aria-live="assertive" aria-atomic="true" style="z-index: 100000000;">
             <div class="toast-header">
                 <strong class="mr-auto">Urly: ${title}</strong>
             </div>
@@ -132,6 +133,7 @@ const createTooltip = (title, message) => {
     });
 };
 
+// eslint-disable-next-line no-unused-vars
 const edit_submit = async (rowID) => {
     const data = {
         _id: $('#id').val(),
@@ -149,13 +151,15 @@ const edit_submit = async (rowID) => {
 
     const json = await response.json();
 
+    if (response.status !== 200) return createTooltip(`${response.status} ${response.statusText}`, json.message);
+
     // update data in global array
     urls[rowID] = json;
 
     // update modal
     $('#title').val(json.title);
     $('#url').val(json.url);
-    $('#lastEdit').val(new Date(json.date).toLocaleString());
+    $('#lastEdit').val(new Date(json.updatedAt).toLocaleString());
 
     // update row with new data
     $(`#url-${rowID}`).replaceWith(makeRow(rowID, json));
@@ -217,6 +221,7 @@ const create_input_check = async () => {
     $('.invalid-feedback').css('display', 'none');
 };
 
+// eslint-disable-next-line no-unused-vars
 const create_generate_modal = () => {
     const carousel = `
         <div id="create_carousel" class="carousel slide d-flex" data-wrap="false" data-interval="false" data-ride="carousel" style="min-height: 100px;">
