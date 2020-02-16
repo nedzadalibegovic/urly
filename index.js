@@ -1,8 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const urlRoute = require('./routes/urls');
-const validationRoute = require('./routes/validation');
+const urlRoute = require('./routes/url');
 const loginRoute = require('./routes/login');
 const redirectRoute = require('./routes/redirect');
 const tokenRoute = require('./routes/token');
@@ -33,8 +32,7 @@ app.use(express.static('public/root'));
 
 // api
 app.use('/api', authentication);
-app.use('/api', validationRoute);
-app.use('/api', urlRoute);
+app.use('/api', urlRoute.router);
 
 // token refresh
 app.use('/token', cookieParser());

@@ -7,8 +7,10 @@ router.get('/', async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const document = await Token.findById(decoded._id);
 
-        if (!await Token.findById(decoded._id)) {
+        if (!document || document.token !== refreshToken) {
+            res.status(403);
             throw new Error('Please login again');
         }
 
@@ -16,10 +18,7 @@ router.get('/', async (req, res, next) => {
 
         res.json({ accessToken: accessToken });
     } catch (err) {
-        if (err.message !== 'Please login again') {
-            res.status(403);
-        }
-
+        if (err.name === 'JsonWebTokenError') res.status(403);
         next(err);
     }
 });
