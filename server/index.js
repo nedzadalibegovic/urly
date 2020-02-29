@@ -27,10 +27,8 @@ app.use(morgan('common'));
 app.use(cors());
 app.use(express.json());
 
-// front end
+// registration and login
 app.use('/login', loginRoute);
-app.use(express.static('public/root'));
-
 app.use('/register', registerRoute);
 
 // api

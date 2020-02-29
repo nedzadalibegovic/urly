@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-router.get('/', express.static('public/login'));
-
 router.post('/', async (req, res, next) => {
     try {
         if (!req.body.username || !req.body.password) {
