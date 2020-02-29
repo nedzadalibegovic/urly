@@ -6,6 +6,7 @@ const loginRoute = require('./routes/login');
 const redirectRoute = require('./routes/redirect');
 const tokenRoute = require('./routes/token');
 const authentication = require('./routes/auth');
+const registerRoute = require('./routes/register');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
@@ -29,6 +30,8 @@ app.use(express.json());
 // front end
 app.use('/login', loginRoute);
 app.use(express.static('public/root'));
+
+app.use('/register', registerRoute);
 
 // api
 app.use('/api', authentication);
