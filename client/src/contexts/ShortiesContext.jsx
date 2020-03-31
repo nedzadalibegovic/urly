@@ -1,9 +1,9 @@
-import React, { createContext, useEffect, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { TokenContext } from './TokenContext';
 
 export const ShortiesContext = createContext();
 
-const ShortiesContextProvider = (props) => {
+const ShortiesContextProvider = props => {
     const { token, renewToken } = useContext(TokenContext);
     const [shorties, setShorties] = useState([]);
 
@@ -12,7 +12,7 @@ const ShortiesContextProvider = (props) => {
 
         const response = await fetch(process.env.REACT_APP_API, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`
             }
         });
 
@@ -21,10 +21,12 @@ const ShortiesContextProvider = (props) => {
         setShorties(await response.json());
     };
 
-    useEffect(() => { renewShorties(); }, [token]);
+    useEffect(() => {
+        renewShorties();
+    }, [token]);
 
     return (
-        <ShortiesContext.Provider value={{ shorties, setShorties, renewShorties }}>
+        <ShortiesContext.Provider value={{ shorties, setShorties }}>
             {props.children}
         </ShortiesContext.Provider>
     );
