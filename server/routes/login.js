@@ -24,14 +24,13 @@ router.post('/', async (req, res, next) => {
             throw new Error('Invalid username or password');
         }
 
+        const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
         const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
-        if (!await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken })) {
-            await Token.create({ _id: user._id, token: refreshToken });
-        }
+        await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
 
         res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/token', maxAge: 604800000 });
-        res.sendStatus(200);
+        res.json({ refreshToken, accessToken });
     } catch (err) {
         next(err);
     }
