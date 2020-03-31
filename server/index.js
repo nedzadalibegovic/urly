@@ -24,7 +24,7 @@ const app = express();
 // required middlewares
 app.use(helmet());
 app.use(morgan('common'));
-app.use(cors());
+app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
 app.use(express.json());
 
 // registration and login
