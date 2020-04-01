@@ -47,7 +47,10 @@ router.post('/', async (req, res, next) => {
 
 router.patch('/:id', checkIfDocumentExists, async (req, res, next) => {
     try {
-        const document = await URL.findOneAndUpdate({ _id: req.params.id }, req.body, { runValidators: true, new: true });
+        const document = await URL.findOneAndUpdate({ _id: req.params.id }, req.body, {
+            runValidators: true,
+            new: true
+        });
         res.json(document);
     } catch (err) {
         if (err.codeName === 'ImmutableField' || err.name === 'ValidationError') res.status(400);

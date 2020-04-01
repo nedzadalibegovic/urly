@@ -19,7 +19,7 @@ router.post('/', async (req, res, next) => {
             throw new Error('Invalid username or password');
         }
 
-        if (!await bcrypt.compare(req.body.password, user.password)) {
+        if (!(await bcrypt.compare(req.body.password, user.password))) {
             res.status(403);
             throw new Error('Invalid username or password');
         }
@@ -29,7 +29,11 @@ router.post('/', async (req, res, next) => {
 
         await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, path: '/token', maxAge: 604800000 });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            path: '/token',
+            maxAge: 604800000
+        });
         res.json({ refreshToken, accessToken });
     } catch (err) {
         next(err);
