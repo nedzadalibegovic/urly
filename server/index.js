@@ -25,6 +25,7 @@ const app = express();
 app.use(helmet());
 app.use(morgan('common'));
 app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 
 // registration and login
@@ -36,7 +37,6 @@ app.use('/api', authentication);
 app.use('/api', urlRoute.router);
 
 // token refresh
-app.use('/token', cookieParser());
 app.use('/token', tokenRoute);
 
 // redirection

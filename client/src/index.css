@@ -31,3 +31,8 @@ code {
     display: table-cell;
     vertical-align: middle;
 }
+
+.shorties-button {
+    display: flex;
+    justify-content: flex-end;
+}

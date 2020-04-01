@@ -7,9 +7,9 @@ const Shorty = ({ title, url }) => {
             <td>{title}</td>
             <td>{url}</td>
             <td>
-                <Button variant="primary" size="sm">
-                    Edit
-                </Button>
+                <div className={'shorties-button'}>
+                    <Button>Edit</Button>
+                </div>
             </td>
         </tr>
     );

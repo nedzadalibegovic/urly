@@ -29,12 +29,28 @@ router.post('/', async (req, res, next) => {
 
         await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
 
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            path: '/token',
-            maxAge: 604800000
-        });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true, domain: process.env.DOMAIN, maxAge: 604800000 });
         res.json({ refreshToken, accessToken });
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/', async (req, res, next) => {
+    const cookie = req.cookies.refreshToken;
+
+    if (!cookie) {
+        res.status(400);
+        return next(new Error('You must be logged in to log out'));
+    }
+
+    try {
+        const { _id: tokenID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
+        const document = await Token.findByIdAndRemove(tokenID).populate('_id', 'username');
+
+        // https://expressjs.com/en/5x/api.html#res.clearCookie
+        res.clearCookie('refreshToken', { httpOnly: true, domain: process.env.DOMAIN });
+        res.json({ message: `User ${document._id.username} logged out` });
     } catch (err) {
         next(err);
     }
