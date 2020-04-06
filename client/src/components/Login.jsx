@@ -10,15 +10,8 @@ const Login = () => {
     const history = useHistory();
 
     const schema = yup.object({
-        username: yup
-            .string()
-            .required()
-            .min(4)
-            .max(20),
-        password: yup
-            .string()
-            .required()
-            .min(8)
+        username: yup.string().required().min(4).max(20),
+        password: yup.string().required().min(8),
     });
 
     const auth = async ({ username, password }, { setStatus, resetForm }) => {
@@ -26,9 +19,9 @@ const Login = () => {
             method: 'POST',
             credentials: 'include',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password }),
         });
         const json = await response.json();
 
@@ -56,7 +49,7 @@ const Login = () => {
                     values,
                     touched,
                     errors,
-                    status
+                    status,
                 }) => (
                     <Form noValidate onSubmit={handleSubmit}>
                         <Form.Group>

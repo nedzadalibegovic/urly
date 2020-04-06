@@ -7,18 +7,19 @@ const Nav = () => {
     const { token, setToken } = useContext(TokenContext);
 
     const logout = async () => {
-        const response = await fetch(process.env.REACT_APP_LOGIN, {
+        await fetch(process.env.REACT_APP_LOGIN, {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
         });
-
         setToken('');
     };
 
     return (
         <Container>
             <Navbar>
-                <Navbar.Brand>Urly</Navbar.Brand>
+                <Navbar.Brand>
+                    <h3>Urly</h3>
+                </Navbar.Brand>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
                     <Navbar.Text>
