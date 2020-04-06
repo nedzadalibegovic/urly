@@ -23,11 +23,11 @@ const Nav = () => {
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
                     <Navbar.Text>
-                        {token ? (
+                        {token && (
                             <Link to={{ pathname: '/login' }} onClick={logout}>
                                 Log out
                             </Link>
-                        ) : null}
+                        )}
                     </Navbar.Text>
                 </Navbar.Collapse>
             </Navbar>

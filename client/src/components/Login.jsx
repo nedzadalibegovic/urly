@@ -84,9 +84,7 @@ const Login = () => {
                             </Form.Control.Feedback>
                         </Form.Group>
 
-                        {status ? (
-                            <Alert variant="danger">{status}</Alert>
-                        ) : null}
+                        {status && <Alert variant="danger">{status}</Alert>}
 
                         <Button variant="primary" type="submit">
                             Submit
