@@ -3,24 +3,24 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import Nav from './components/Nav';
-import ShortiesList from './components/ShortiesList';
+import UrliesList from './components/UrliesList';
 import EditContextProvider from './contexts/EditContext';
-import ShortiesContextProvider from './contexts/ShortiesContext';
 import TokenContextProvider from './contexts/TokenContext';
+import UrliesContextProvider from './contexts/UrliesContext';
 
 function App() {
     return (
         <Router>
             <TokenContextProvider>
-                <ShortiesContextProvider>
+                <UrliesContextProvider>
                     <Nav />
                     <Switch>
                         <Route component={Login} path="/login" exact />
                         <EditContextProvider>
-                            <Route component={ShortiesList} path="/" exact />
+                            <Route component={UrliesList} path="/" exact />
                         </EditContextProvider>
                     </Switch>
-                </ShortiesContextProvider>
+                </UrliesContextProvider>
             </TokenContextProvider>
         </Router>
     );

@@ -23,16 +23,16 @@ code {
     min-width: 250px;
 }
 
-.shorties-list {
+.urlies-list {
     margin-top: 60px;
 }
 
-.shorties-list td {
+.urlies-list td {
     display: table-cell;
     vertical-align: middle;
 }
 
-.shorties-button {
+.urlies-button {
     display: flex;
     justify-content: flex-end;
 }

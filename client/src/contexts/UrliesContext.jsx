@@ -1,13 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { TokenContext } from './TokenContext';
 
-export const ShortiesContext = createContext();
+export const UrliesContext = createContext();
 
-const ShortiesContextProvider = (props) => {
+const UrliesContextProvider = (props) => {
     const { token, renewToken } = useContext(TokenContext);
-    const [shorties, setShorties] = useState([]);
+    const [urlies, setUrlies] = useState([]);
 
-    const renewShorties = async () => {
+    const renewUrlies = async () => {
         if (!token) return renewToken();
 
         const response = await fetch(process.env.REACT_APP_API, {
@@ -18,22 +18,22 @@ const ShortiesContextProvider = (props) => {
 
         if (!response.ok) return renewToken();
 
-        setShorties(await response.json());
+        setUrlies(await response.json());
     };
 
-    const addShorty = async (shorty) => {
+    const addUrlies = async (urly) => {
         const response = await fetch(process.env.REACT_APP_API, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(shorty),
+            body: JSON.stringify(urly),
         });
         const json = await response.json();
 
         if (response.ok) {
-            setShorties([...shorties, json]);
+            setUrlies([...urlies, json]);
         } else if (response.status === 403) {
             await renewToken();
             throw new Error('Access token expired, please retry action');
@@ -42,26 +42,26 @@ const ShortiesContextProvider = (props) => {
         }
     };
 
-    const editShorty = async (shorty) => {
+    const editUrlies = async (urly) => {
         const response = await fetch(
-            process.env.REACT_APP_API + `/${shorty._id}`,
+            process.env.REACT_APP_API + `/${urly._id}`,
             {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify(shorty),
+                body: JSON.stringify(urly),
             }
         );
         const json = await response.json();
 
         if (response.ok) {
-            const newShorties = shorties.slice();
-            const index = newShorties.findIndex((x) => x._id === json._id);
+            const newUrlies = urlies.slice();
+            const index = newUrlies.findIndex((x) => x._id === json._id);
 
-            newShorties[index] = json;
-            setShorties(newShorties);
+            newUrlies[index] = json;
+            setUrlies(newUrlies);
         } else if (response.status === 403) {
             await renewToken();
             throw new Error('Access token expired, please retry action');
@@ -71,14 +71,14 @@ const ShortiesContextProvider = (props) => {
     };
 
     useEffect(() => {
-        renewShorties();
+        renewUrlies();
     }, [token]);
 
     return (
-        <ShortiesContext.Provider value={{ shorties, addShorty, editShorty }}>
+        <UrliesContext.Provider value={{ urlies, addUrlies, editUrlies }}>
             {props.children}
-        </ShortiesContext.Provider>
+        </UrliesContext.Provider>
     );
 };
 
-export default ShortiesContextProvider;
+export default UrliesContextProvider;

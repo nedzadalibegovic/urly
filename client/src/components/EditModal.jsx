@@ -3,11 +3,11 @@ import React, { useContext, useEffect } from 'react';
 import { Alert, Button, Form, Modal } from 'react-bootstrap';
 import * as yup from 'yup';
 import { EditContext } from '../contexts/EditContext';
-import { ShortiesContext } from '../contexts/ShortiesContext';
+import { UrliesContext } from '../contexts/UrliesContext';
 
 const EditModal = () => {
     const { id, show, setShow, title, url } = useContext(EditContext);
-    const { editShorty } = useContext(ShortiesContext);
+    const { editUrly } = useContext(UrliesContext);
 
     const formik = useFormik({
         initialValues: {
@@ -16,13 +16,13 @@ const EditModal = () => {
         },
         onSubmit: async (values, { setStatus }) => {
             try {
-                const shorty = {
+                const urly = {
                     _id: id,
                     title: values.title,
                     url: values.url,
                 };
 
-                await editShorty(shorty);
+                await editUrly(urly);
             } catch (err) {
                 setStatus(err.message);
             }

@@ -1,21 +1,21 @@
 import React, { useContext } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { ShortiesContext } from '../contexts/ShortiesContext';
+import { UrliesContext } from '../contexts/UrliesContext';
 import EditModal from './EditModal';
-import Shorty from './Shorty';
+import Urly from './Urly';
 
-const ShortiesList = () => {
-    const { shorties } = useContext(ShortiesContext);
+const UrliesList = () => {
+    const { urlies } = useContext(UrliesContext);
 
     return (
-        <Container className="shorties-list">
+        <Container className="urlies-list">
             <EditModal />
             <Row>
                 <Col>
-                    <p>You have shortened {shorties.length} links in total</p>
+                    <p>You have shortened {urlies.length} links in total</p>
                 </Col>
                 <Col>
-                    <div className={'shorties-button'}>
+                    <div className={'urlies-button'}>
                         <Button>Shorten</Button>
                     </div>
                 </Col>
@@ -30,12 +30,12 @@ const ShortiesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {shorties.map((shorty) => (
-                            <Shorty
-                                id={shorty._id}
-                                title={shorty.title}
-                                url={shorty.url}
-                                key={shorty._id}
+                        {urlies.map((urly) => (
+                            <Urly
+                                id={urly._id}
+                                title={urly.title}
+                                url={urly.url}
+                                key={urly._id}
                             />
                         ))}
                     </tbody>
@@ -45,4 +45,4 @@ const ShortiesList = () => {
     );
 };
 
-export default ShortiesList;
+export default UrliesList;
