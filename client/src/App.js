@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Login from './components/Login';
 import Nav from './components/Nav';
 import ShortiesList from './components/ShortiesList';
+import EditContextProvider from './contexts/EditContext';
 import ShortiesContextProvider from './contexts/ShortiesContext';
 import TokenContextProvider from './contexts/TokenContext';
 
@@ -15,7 +16,9 @@ function App() {
                     <Nav />
                     <Switch>
                         <Route component={Login} path="/login" exact />
-                        <Route component={ShortiesList} path="/" exact />
+                        <EditContextProvider>
+                            <Route component={ShortiesList} path="/" exact />
+                        </EditContextProvider>
                     </Switch>
                 </ShortiesContextProvider>
             </TokenContextProvider>

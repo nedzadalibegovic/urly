@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { ShortiesContext } from '../contexts/ShortiesContext';
+import EditModal from './EditModal';
 import Shorty from './Shorty';
 
 const ShortiesList = () => {
@@ -8,6 +9,7 @@ const ShortiesList = () => {
 
     return (
         <Container className="shorties-list">
+            <EditModal />
             <Row>
                 <Col>
                     <p>You have shortened {shorties.length} links in total</p>
@@ -28,8 +30,9 @@ const ShortiesList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {shorties.map(shorty => (
+                        {shorties.map((shorty) => (
                             <Shorty
+                                id={shorty._id}
                                 title={shorty.title}
                                 url={shorty.url}
                                 key={shorty._id}
