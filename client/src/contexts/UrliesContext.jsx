@@ -21,7 +21,7 @@ const UrliesContextProvider = (props) => {
         setUrlies(await response.json());
     };
 
-    const addUrlies = async (urly) => {
+    const addUrly = async (urly) => {
         const response = await fetch(process.env.REACT_APP_API, {
             method: 'POST',
             headers: {
@@ -42,7 +42,7 @@ const UrliesContextProvider = (props) => {
         }
     };
 
-    const editUrlies = async (urly) => {
+    const editUrly = async (urly) => {
         const response = await fetch(
             process.env.REACT_APP_API + `/${urly._id}`,
             {
@@ -75,7 +75,7 @@ const UrliesContextProvider = (props) => {
     }, [token]);
 
     return (
-        <UrliesContext.Provider value={{ urlies, addUrlies, editUrlies }}>
+        <UrliesContext.Provider value={{ urlies, addUrly, editUrly }}>
             {props.children}
         </UrliesContext.Provider>
     );
