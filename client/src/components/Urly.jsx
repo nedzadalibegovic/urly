@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { EditContext } from '../contexts/EditContext';
+import CopyButton from './CopyButton';
 
 const Urly = ({ id, title, url }) => {
     const { setShow, setId, setTitle, setUrl } = useContext(EditContext);
@@ -18,6 +19,7 @@ const Urly = ({ id, title, url }) => {
             <td>{url}</td>
             <td>
                 <div className={'urlies-button'}>
+                    <CopyButton id={id} />
                     <Button onClick={showModal}>Edit</Button>
                 </div>
             </td>
