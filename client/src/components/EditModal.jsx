@@ -7,7 +7,7 @@ import { UrliesContext } from '../contexts/UrliesContext';
 
 const EditModal = () => {
     const { id, show, setShow, title, url } = useContext(EditContext);
-    const { editUrly } = useContext(UrliesContext);
+    const { editUrly, deleteUrly } = useContext(UrliesContext);
 
     const formik = useFormik({
         initialValues: {
@@ -35,6 +35,15 @@ const EditModal = () => {
     });
 
     const handleClose = () => setShow(false);
+
+    const deletion = async () => {
+        try {
+            await deleteUrly(id);
+            handleClose();
+        } catch (err) {
+            formik.setStatus(err.message);
+        }
+    }
 
     useEffect(() => {
         formik.resetForm();
@@ -78,8 +87,8 @@ const EditModal = () => {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
+                    <Button variant="danger" onClick={deletion}>
+                        Delete
                     </Button>
                     <Button variant="primary" type="submit">
                         Save Changes

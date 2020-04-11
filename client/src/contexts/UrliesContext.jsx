@@ -70,12 +70,34 @@ const UrliesContextProvider = (props) => {
         }
     };
 
+    const deleteUrly = async (id) => {
+        const response = await fetch(process.env.REACT_APP_API + `/${id}`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (response.ok) {
+            const newUrlies = urlies.filter((urly) => id !== urly._id);
+            setUrlies(newUrlies);
+        } else if (response.status === 403) {
+            await renewToken();
+            throw new Error('Access token expired, please retry action');
+        } else {
+            const json = await response.json();
+            throw new Error(json.message);
+        }
+    };
+
     useEffect(() => {
         renewUrlies();
     }, [token]);
 
     return (
-        <UrliesContext.Provider value={{ urlies, addUrly, editUrly }}>
+        <UrliesContext.Provider
+            value={{ urlies, addUrly, editUrly, deleteUrly }}
+        >
             {props.children}
         </UrliesContext.Provider>
     );
