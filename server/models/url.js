@@ -5,20 +5,21 @@ let urlSchema = new mongoose.Schema(
     {
         title: {
             type: String,
-            required: true
+            maxlength: 32,
+            required: true,
         },
         url: {
             type: String,
             required: true,
             validate: {
-                validator: str => urlExist(str),
-                message: str => `${str.value} is not a valid URL`
-            }
-        }
+                validator: (str) => urlExist(str),
+                message: (str) => `${str.value} is not a valid URL`,
+            },
+        },
     },
     {
         versionKey: false,
-        timestamps: true
+        timestamps: true,
     }
 );
 

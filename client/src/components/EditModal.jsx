@@ -28,7 +28,7 @@ const EditModal = () => {
             }
         },
         validationSchema: yup.object({
-            title: yup.string().required('Cannot be empty'),
+            title: yup.string().max(32).required('Cannot be empty'),
             url: yup.string().url('Must be a valid URL').required(),
         }),
         initialStatus: '',
@@ -43,7 +43,7 @@ const EditModal = () => {
         } catch (err) {
             formik.setStatus(err.message);
         }
-    }
+    };
 
     useEffect(() => {
         formik.resetForm();
