@@ -34,6 +34,7 @@ const UrliesContextProvider = (props) => {
 
         if (response.ok) {
             setUrlies([...urlies, json]);
+            return json;
         } else if (response.status === 403) {
             await renewToken();
             throw new Error('Access token expired, please retry action');

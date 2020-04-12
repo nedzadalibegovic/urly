@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
+import { Col, Container, Row, Table } from 'react-bootstrap';
 import { UrliesContext } from '../contexts/UrliesContext';
 import EditModal from './EditModal';
+import SubmitModal from './SubmitModal';
 import Urly from './Urly';
 
 const UrliesList = () => {
@@ -16,7 +17,7 @@ const UrliesList = () => {
                 </Col>
                 <Col>
                     <div className={'urlies-button'}>
-                        <Button>Shorten</Button>
+                        <SubmitModal />
                     </div>
                 </Col>
             </Row>

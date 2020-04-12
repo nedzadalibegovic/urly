@@ -36,3 +36,20 @@ code {
     display: flex;
     justify-content: flex-end;
 }
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.modal-body-center {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.modal-body-center > * {
+    width: 100%;
+}
