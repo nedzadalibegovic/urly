@@ -4,7 +4,7 @@ const { checkIfDocumentExists } = require('./url');
 router.get('/:id', checkIfDocumentExists, async (req, res, next) => {
     try {
         const document = res.locals.document;
-        res.redirect(303, document.url);
+        res.redirect(307, document.url);
     } catch (err) {
         next(err);
     }
