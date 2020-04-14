@@ -17,7 +17,6 @@ const Login = () => {
     const auth = async ({ username, password }, { setStatus, resetForm }) => {
         const response = await fetch(process.env.REACT_APP_LOGIN, {
             method: 'POST',
-            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
