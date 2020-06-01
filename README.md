@@ -11,7 +11,7 @@ To prevent abuse, the only allowed domains are `github.com` and `medium.com` on 
 every three hours the demo web app is purged.
 
 ## Can I make my own front end?
-Heck yeah, you can! Head over to the `/server` subdirectory in this repository and 
+Head over to the `/server` subdirectory in this repository and 
 make yourself familiar with the back end, the README.md should be useful to get you going.
 
 You can also use the demo back end (urly.lyra.nedzad.dev) to experiment with API calls.
