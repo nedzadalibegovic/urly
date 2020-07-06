@@ -14,16 +14,16 @@
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "helmet": "^3.22.0",
+    "helmet": "^3.23.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.9.13",
+    "mongoose": "^5.9.21",
     "morgan": "^1.10.0",
     "url-exist": "^1.1.1"
   },
   "devDependencies": {
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.4"
   },
   "prettier": {
     "printWidth": 120,
