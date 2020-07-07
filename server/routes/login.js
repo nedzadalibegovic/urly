@@ -33,7 +33,6 @@ router.post('/', async (req, res, next) => {
             httpOnly: true,
             domain: process.env.DOMAIN,
             maxAge: 604800000,
-            path: '/token',
             secure: process.env.NODE_ENV === 'production' ? true : false,
         });
         res.json({ refreshToken, accessToken });
