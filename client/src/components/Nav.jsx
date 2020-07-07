@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom';
 import { TokenContext } from '../contexts/TokenContext';
 
 const Nav = () => {
-    const { token, setToken } = useContext(TokenContext);
+    const { token, deleteToken } = useContext(TokenContext);
 
     const logout = async () => {
         await fetch(process.env.REACT_APP_LOGIN, {
             method: 'DELETE',
             credentials: 'include',
         });
-        setToken('');
+        deleteToken();
     };
 
     return (
