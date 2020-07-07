@@ -21,6 +21,9 @@ mongoose.connect(process.env.MONGO);
 
 const app = express();
 
+// for running behind nginx proxy
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 'uniquelocal');
+
 // required middlewares
 app.use(helmet());
 app.use(morgan('common'));
