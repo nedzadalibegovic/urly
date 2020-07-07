@@ -4,11 +4,11 @@ import { TokenContext } from './TokenContext';
 export const UrliesContext = createContext();
 
 const UrliesContextProvider = (props) => {
-    const { token, renewToken } = useContext(TokenContext);
+    const { token, loadToken, renewToken } = useContext(TokenContext);
     const [urlies, setUrlies] = useState([]);
 
     const renewUrlies = async () => {
-        if (!token) return renewToken();
+        if (!token) return loadToken();
 
         const response = await fetch(process.env.REACT_APP_API, {
             headers: {
