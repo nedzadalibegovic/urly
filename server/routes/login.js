@@ -29,7 +29,13 @@ router.post('/', async (req, res, next) => {
 
         await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
 
-        res.cookie('refreshToken', refreshToken, { httpOnly: true, domain: process.env.DOMAIN, maxAge: 604800000 });
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            domain: process.env.DOMAIN,
+            maxAge: 604800000,
+            path: '/token',
+            secure: process.env.NODE_ENV === 'production' ? true : false,
+        });
         res.json({ refreshToken, accessToken });
     } catch (err) {
         next(err);
