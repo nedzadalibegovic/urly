@@ -24,8 +24,8 @@ router.post('/', async (req, res, next) => {
             throw new Error('Invalid username or password');
         }
 
-        const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
-        const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        const refreshToken = jwt.sign({ userID: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
         await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
 
@@ -50,8 +50,8 @@ router.delete('/', async (req, res, next) => {
     }
 
     try {
-        const { _id: tokenID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
-        const document = await Token.findByIdAndRemove(tokenID).populate('_id', 'username');
+        const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
+        const document = await Token.findByIdAndRemove(userID);
 
         // https://expressjs.com/en/5x/api.html#res.clearCookie
         res.clearCookie('refreshToken', { httpOnly: true, domain: process.env.DOMAIN });

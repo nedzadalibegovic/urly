@@ -7,14 +7,14 @@ router.get('/', async (req, res, next) => {
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        const document = await Token.findById(decoded._id);
+        const document = await Token.findById(decoded.userID);
 
         if (!document || document.token !== refreshToken) {
             res.status(403);
             throw new Error('Please login again');
         }
 
-        const accessToken = jwt.sign({ _id: decoded._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        const accessToken = jwt.sign({ userID: document._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
 
         res.json({ accessToken: accessToken });
     } catch (err) {

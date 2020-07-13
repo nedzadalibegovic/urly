@@ -24,9 +24,9 @@ router.delete('/', async (req, res, next) => {
     const cookie = req.cookies.refreshToken;
 
     try {
-        const { _id } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
-        const user = await User.findByIdAndRemove(_id);
-        const token = await Token.findByIdAndRemove(_id);
+        const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
+        const user = await User.findByIdAndRemove(userID);
+        const token = await Token.findByIdAndRemove(userID);
 
         if (user === null && token === null) {
             res.status(400);
