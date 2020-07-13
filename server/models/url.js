@@ -16,6 +16,12 @@ let urlSchema = new mongoose.Schema(
                 message: (str) => `${str.value} is not a valid URL`,
             },
         },
+        userID: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+            index: true,
+        },
     },
     {
         versionKey: false,
