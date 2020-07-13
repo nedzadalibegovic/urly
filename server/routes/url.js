@@ -68,7 +68,4 @@ router.delete('/:id', checkIfDocumentExists, async (req, res, next) => {
     }
 });
 
-module.exports = {
-    checkIfDocumentExists,
-    router
-};
+module.exports = router;
