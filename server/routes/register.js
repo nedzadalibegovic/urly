@@ -23,6 +23,11 @@ router.post('/', async (req, res, next) => {
 router.delete('/', async (req, res, next) => {
     const cookie = req.cookies.refreshToken;
 
+    if (!cookie) {
+        res.status(400);
+        return next(new Error('You must be logged in to delete your account'));
+    }
+
     try {
         const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
         const user = await User.findByIdAndRemove(userID);
@@ -30,7 +35,7 @@ router.delete('/', async (req, res, next) => {
 
         if (user === null && token === null) {
             res.status(400);
-            throw new Error('User doesn\'t exist');
+            throw new Error("User doesn't exist");
         }
 
         res.clearCookie('refreshToken');
