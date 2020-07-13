@@ -37,7 +37,7 @@ app.use('/register', registerRoute);
 
 // api
 app.use('/api', authentication);
-app.use('/api', urlRoute.router);
+app.use('/api', urlRoute);
 
 // token refresh
 app.use('/token', tokenRoute);

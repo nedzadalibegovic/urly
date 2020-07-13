@@ -3,7 +3,7 @@ const URL = require('../models/url');
 
 const checkIfDocumentExists = async (req, res, next) => {
     try {
-        const document = await URL.findById(req.params.id);
+        const document = await URL.findById(req.params.id).where('userID', res.locals.userID);
 
         if (!document) {
             res.status(404);
@@ -24,7 +24,7 @@ const checkIfDocumentExists = async (req, res, next) => {
 
 router.get('/', async (req, res, next) => {
     try {
-        const documents = await URL.find();
+        const documents = await URL.find({ userID: res.locals.userID });
         res.json(documents);
     } catch (err) {
         next(err);
@@ -37,7 +37,7 @@ router.get('/:id', checkIfDocumentExists, async (req, res) => {
 
 router.post('/', async (req, res, next) => {
     try {
-        const document = await URL.create(req.body);
+        const document = await URL.create({ ...req.body, userID: res.locals.userID });
         res.json(document);
     } catch (err) {
         if (err.name === 'ValidationError') res.status(400);
@@ -49,7 +49,7 @@ router.patch('/:id', checkIfDocumentExists, async (req, res, next) => {
     try {
         const document = await URL.findOneAndUpdate({ _id: req.params.id }, req.body, {
             runValidators: true,
-            new: true
+            new: true,
         });
         res.json(document);
     } catch (err) {
@@ -68,7 +68,4 @@ router.delete('/:id', checkIfDocumentExists, async (req, res, next) => {
     }
 });
 
-module.exports = {
-    checkIfDocumentExists,
-    router
-};
+module.exports = router;
