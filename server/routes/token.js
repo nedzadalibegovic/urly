@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
         const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         const document = await Token.findById(decoded.userID);
 
-        if (!document || document.token !== refreshToken) {
+        if (document === null || document.token !== refreshToken) {
             res.status(403);
             throw new Error('Please login again');
         }
