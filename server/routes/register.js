@@ -12,7 +12,9 @@ router.post('/', async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         user.password = hashedPassword;
 
-        res.json(await user.save());
+        await user.save();
+
+        res.json({ message: `User ${user.username} created` });
     } catch (err) {
         if (err.name === 'ValidationError' || err.code === 11000) res.status(400);
 

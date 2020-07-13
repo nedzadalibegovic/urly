@@ -35,7 +35,7 @@ router.post('/', async (req, res, next) => {
             maxAge: 604800000,
             secure: process.env.NODE_ENV === 'production' ? true : false,
         });
-        res.json({ refreshToken, accessToken });
+        res.json({ accessToken });
     } catch (err) {
         next(err);
     }
