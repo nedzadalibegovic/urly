@@ -24,10 +24,10 @@ router.post('/', async (req, res, next) => {
             throw new Error('Invalid username or password');
         }
 
-        const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
-        const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        const refreshToken = jwt.sign({ userID: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
-        await Token.findOneAndUpdate({ _id: user._id }, { token: refreshToken }, { upsert: true });
+        await Token.findByIdAndUpdate(user._id, { token: refreshToken }, { upsert: true });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
@@ -35,7 +35,7 @@ router.post('/', async (req, res, next) => {
             maxAge: 604800000,
             secure: process.env.NODE_ENV === 'production' ? true : false,
         });
-        res.json({ refreshToken, accessToken });
+        res.json({ accessToken });
     } catch (err) {
         next(err);
     }
@@ -50,12 +50,12 @@ router.delete('/', async (req, res, next) => {
     }
 
     try {
-        const { _id: tokenID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
-        const document = await Token.findByIdAndRemove(tokenID).populate('_id', 'username');
+        const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
+        const document = await Token.findByIdAndRemove(userID);
 
         // https://expressjs.com/en/5x/api.html#res.clearCookie
-        res.clearCookie('refreshToken', { httpOnly: true, domain: process.env.DOMAIN });
-        res.json({ message: `User ${document._id.username} logged out` });
+        res.clearCookie('refreshToken');
+        res.json({ message: `User ${document.username} logged out` });
     } catch (err) {
         next(err);
     }
