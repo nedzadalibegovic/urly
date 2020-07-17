@@ -18,7 +18,7 @@ const Nav = () => {
         <Container>
             <Navbar>
                 <Navbar.Brand>
-                    <h3>Urly</h3>
+                    <h3>URLY</h3>
                 </Navbar.Brand>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
