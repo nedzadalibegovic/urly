@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const Token = require('../models/token');
+const URL = require('../models/url');
 
 router.post('/', async (req, res, next) => {
     try {
@@ -57,6 +58,8 @@ router.delete('/', async (req, res, next) => {
             res.status(400);
             throw new Error("User doesn't exist");
         }
+
+        await URL.deleteMany({ userID: user._id });
 
         res.clearCookie('refreshToken');
         res.json({ message: `User ${user.username} deleted` });
