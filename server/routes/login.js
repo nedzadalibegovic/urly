@@ -69,11 +69,10 @@ router.delete('/', async (req, res, next) => {
 
     try {
         const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
-        const document = await Token.findByIdAndRemove(userID);
+        const document = await Token.findByIdAndRemove(userID).populate('_id');
 
-        // https://expressjs.com/en/5x/api.html#res.clearCookie
         res.clearCookie('refreshToken');
-        res.json({ message: `User ${document.username} logged out` });
+        res.json({ message: `User ${document._id.username} logged out` });
     } catch (err) {
         next(err);
     }
