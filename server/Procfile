@@ -1,0 +1,2 @@
+web: node index.js
+reset: node ./dokku/reset.js
