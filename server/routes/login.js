@@ -24,10 +24,28 @@ router.post('/', async (req, res, next) => {
             throw new Error('Invalid username or password');
         }
 
-        const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
-        const refreshToken = jwt.sign({ userID: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+        let token = await Token.findById(user._id);
 
-        await Token.findByIdAndUpdate(user._id, { token: refreshToken }, { upsert: true });
+        if (token === null) {
+            token = await Token.create({
+                _id: user._id,
+                token: jwt.sign({ userID: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' }),
+            });
+        }
+
+        try {
+            jwt.verify(token.token, process.env.JWT_REFRESH_SECRET);
+        } catch (err) {
+            if (err.name === 'TokenExpiredError') {
+                token.token = jwt.sign({ userID: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+                await token.save();
+            } else {
+                throw err;
+            }
+        }
+
+        const accessToken = jwt.sign({ userID: user._id }, process.env.JWT_ACCESS_SECRET, { expiresIn: '10m' });
+        const refreshToken = token.token;
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
