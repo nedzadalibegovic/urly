@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const Domain = require('../models/domain');
 const URL = require('../models/url');
@@ -20,7 +21,7 @@ const main = async () => {
     process.stdout.write('Creating demo user.......');
     const { _id } = await User.create({
         username: 'demo',
-        password: 'skafiskafnjak',
+        password: await bcrypt.hash('skafiskafnjak', 10),
     });
     process.stdout.write('.........OK\n');
 
