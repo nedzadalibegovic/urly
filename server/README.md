@@ -31,7 +31,7 @@ Authorization is done using Bearer Tokens, i.e. all requests the require authori
 
 | Endpoint    | Methods            | Details         |
 | ----------- | ------------------ | --------------- |
-| `/register` | POST               | [🔗](#register) |
+| `/register` | POST, DELETE       | [🔗](#register) |
 | `/login`    | POST, DELETE       | [🔗](#login)    |
 | `/api`      | GET, POST          | [🔗](#api)      |
 | `/api/:id`  | GET, PATCH, DELETE | [🔗](#api)      |
@@ -69,6 +69,33 @@ POST /register
     "password": "$2b$10$Ex.y6Lt2oxDsC3J8LChpK.J1AEqr5Fxs0QHSwn7jIvr.Rruyoqzhm",
     "createdAt": "2020-04-13T22:57:24.294Z",
     "updatedAt": "2020-04-13T22:57:24.294Z"
+}
+```
+
+### DELETE /register
+
+Use this endpoint to delete an `User` and all associated records.
+
+#### Request:
+
+The `username` and `password` fields are required, as well as the `refreshToken` cookie.
+
+```json
+DELETE /register
+
+{
+    "username": "john.doe",
+    "password": "password"
+}
+```
+
+#### Response:
+
+```json
+200 OK
+
+{
+    "message": "User john.doe deleted"
 }
 ```
 
