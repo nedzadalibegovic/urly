@@ -32,7 +32,25 @@ router.delete('/', async (req, res, next) => {
 
     try {
         const { userID } = jwt.verify(cookie, process.env.JWT_REFRESH_SECRET);
-        const user = await User.findByIdAndRemove(userID);
+
+        if (!req.body.username || !req.body.password) {
+            res.status(400);
+            throw new Error('Missing username or password');
+        }
+
+        const user = await User.findOne({ username: req.body.username });
+
+        if (user === null) {
+            res.status(400);
+            throw new Error('Invalid username or password');
+        }
+
+        if (!(await bcrypt.compare(req.body.password, user.password))) {
+            res.status(400);
+            throw new Error('Invalid username or password');
+        }
+
+        await user.deleteOne();
         const token = await Token.findByIdAndRemove(userID);
 
         if (user === null && token === null) {
