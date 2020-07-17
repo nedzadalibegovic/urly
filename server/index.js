@@ -11,6 +11,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const { errorHandler, notFound } = require('./routes/error');
+const filterRoute = require('./routes/filter');
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -37,6 +38,7 @@ app.use('/register', registerRoute);
 
 // api
 app.use('/api', authentication);
+if (process.env.FILTER === '1') app.use('/api', filterRoute);
 app.use('/api', urlRoute);
 
 // token refresh
