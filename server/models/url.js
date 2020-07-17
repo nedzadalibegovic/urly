@@ -15,6 +15,7 @@ let urlSchema = new mongoose.Schema(
                 validator: (str) => urlExist(str),
                 message: (str) => `${str.value} is not a valid URL`,
             },
+            unique: true,
         },
         userID: {
             type: mongoose.Schema.Types.ObjectId,
