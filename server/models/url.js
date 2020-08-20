@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const urlExist = require('url-exist');
+const got = require('got');
 
 let urlSchema = new mongoose.Schema(
     {
@@ -12,7 +12,14 @@ let urlSchema = new mongoose.Schema(
             type: String,
             required: true,
             validate: {
-                validator: (str) => urlExist(str),
+                validator: async (str) => {
+                    try {
+                        const { statusCode } = await got(str);
+                        return statusCode < 400;
+                    } catch (err) {
+                        return false;
+                    }
+                },
                 message: (str) => `${str.value} is not a valid URL`,
             },
             unique: true,
